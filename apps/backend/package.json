@@ -1,0 +1,15 @@
+{
+  "name": "@nata/backend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsrs --noEmit -p tsconfig.json && effect-tsrs diagnostics --strict --project tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@nata/rpc": "workspace:*",
+    "@sentry/cloudflare": "11.11.0",
+    "@sentry/effect": "11.11.0",
+    "effect": "4.1.4"
+  }
+}
