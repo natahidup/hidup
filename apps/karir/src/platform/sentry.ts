@@ -30,10 +30,14 @@ export const startSentry = (): void => {
   })
 }
 
-type Tagged = { readonly _tag: string }
+/** Message tags Foldkit put on the wire — every defineMessageUnion member. */
+type TaggedMessage = { readonly _tag: string }
 
 /** Foldkit calls this after the runtime stops, before it paints the crash view. */
-export const reportCrash = ({ error, message }: Runtime.CrashContext<unknown, Tagged>): void => {
+export const reportCrash = <Model, Message extends TaggedMessage>({
+  error,
+  message,
+}: Runtime.CrashContext<Model, Message>): void => {
   if (!DSN) return
   Sentry.captureException(error, {
     level: 'fatal',
@@ -48,7 +52,9 @@ export const reportCrash = ({ error, message }: Runtime.CrashContext<unknown, Ta
  * for a phase over it. A healthy frame costs nothing. The Message tag says which
  * gesture was slow.
  */
-export const reportSlow = (context: Runtime.SlowContext<unknown, Tagged>): void => {
+export const reportSlow = <Model, Message extends TaggedMessage>(
+  context: Runtime.SlowContext<Model, Message>,
+): void => {
   // An `onSlow` callback replaces Foldkit's console warning, so keep it in development.
   if (!import.meta.env.PROD) Runtime.defaultSlowCallback(context as never)
   if (!DSN) return
