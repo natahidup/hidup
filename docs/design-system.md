@@ -54,6 +54,13 @@ utilities that appear only inside `@nata/ui` are generated. `packages/ui`'s own
 `styles.css` also uses `@source '.'`. A karir test fails the build CSS when key
 utilities such as `.bg-primary` are missing.
 
+## Dialog overlay
+
+The dialog backdrop is `fixed inset-0` with ink (`--foreground` / `#1B1B1F`) at
+40% opacity. Do not put Tailwind reserved sizing keywords (`screen`, `full`,
+`auto`, …) into the spacing scale — they collide with `*-screen` / `*-full`
+utilities (see `RESERVED_SPACING_KEYS`).
+
 ## Showcase
 
 `apps/karir` exposes an internal gallery at `/karir/dev/ui` (Vite base `/karir`) when `import.meta.env.DEV` is true, or when `VITE_UI_SHOWCASE=true`. Flags live in `apps/karir/src/platform/flags.ts`. Light mode only until dark tokens are designed.
