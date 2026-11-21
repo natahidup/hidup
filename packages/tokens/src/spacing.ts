@@ -17,8 +17,8 @@ export const spacing = {
   '8': '2rem',
   /** 48px */
   '12': '3rem',
-  /** Screen edge margin */
-  screen: '1rem',
+  /** Screen edge margin (16px). Named `page` so it does not clobber `min-h-screen`. */
+  page: '1rem',
 } as const
 
 export type Spacing = typeof spacing
