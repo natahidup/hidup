@@ -1,2 +1,4 @@
 @import 'tailwindcss';
+/* Scan @nata/ui so component class strings generate utilities. */
+@source '../../../packages/ui/src';
 @import '@nata/ui/styles.css';
