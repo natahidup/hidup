@@ -16,13 +16,13 @@ const importsHostAdapter =
 /** A context sees a store interface. The implementation lives in `platform`. */
 const importsPlatform = /(?:\bfrom\s+|\bimport\s*\(?\s*)['"](?:\.{1,2}\/)+platform\//
 
-/** The browser talks to the RPC contract, never to the API Worker's code. */
+/** The browser talks to the RPC contract, never to a service Worker's code. */
 const importsBackend =
-  /(?:\bfrom\s+|\bimport\s*\(?\s*)['"](?:@nata\/backend|(?:\.{1,2}\/)+backend|apps\/backend)/
+  /(?:\bfrom\s+|\bimport\s*\(?\s*)['"](?:@nata\/(?:backend|karir-api)|(?:\.{1,2}\/)+(?:backend|karir-api)|(?:apps|services)\/)/
 
-/** The contract is shared by both apps, so it must not depend on either. */
+/** The contract is shared by apps and services, so it must not depend on either. */
 const importsApp =
-  /(?:\bfrom\s+|\bimport\s*\(?\s*)['"](?:@nata\/(?:web|backend|reference)|(?:\.{1,2}\/)+apps\/)/
+  /(?:\bfrom\s+|\bimport\s*\(?\s*)['"](?:@nata\/(?:web|backend|karir|karir-api|reference)|(?:\.{1,2}\/)+(?:apps|services)\/)/
 
 /** The browser must not import a host adapter. Sentry is a browser SDK, so it is allowed. */
 const importsAdapter =

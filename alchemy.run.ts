@@ -86,7 +86,7 @@ export default Alchemy.Stack(
   Effect.gen(function* () {
     const stage = yield* Alchemy.Stack.use((stack) => Effect.succeed(stack.stage))
     const ApiWorker = Cloudflare.Worker('Api', {
-      main: './apps/backend/src/worker.ts',
+      main: './services/karir/src/worker.ts',
       // A stable local URL for the service binding. The website takes 5173.
       dev: { port: 1337 },
       env: { ...sentryEnv },
