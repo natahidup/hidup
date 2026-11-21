@@ -30,6 +30,7 @@ export const emitTokensCss = (): string => {
 ${cssVarBlock({ radius: lightRadius, ...lightColors })}
 }
 
+/* TODO: Replace mirrored light values with a designed Nata dark palette. */
 .dark {
 ${cssVarBlock(darkColors)}
 }

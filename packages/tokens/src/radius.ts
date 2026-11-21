@@ -1,18 +1,21 @@
 /**
- * Corner radii. `--radius` is the base; sm/md/lg/xl scale from it the way
- * shadcn / Tailwind v4 theme mapping expects.
+ * Corner radii. Base is 4px; chip is 2px; bottom-sheet top corners are 12px.
  */
 export const radius = {
   none: '0',
-  /** Base radius used by shadcn semantic tokens. */
-  base: '0.625rem',
-  sm: 'calc(var(--radius) * 0.6)',
-  md: 'calc(var(--radius) * 0.8)',
+  /** Chip / tight control */
+  chip: '2px',
+  /** Base radius used by shadcn semantic tokens (`--radius`). */
+  base: '4px',
+  sm: '2px',
+  md: '4px',
   lg: 'var(--radius)',
-  xl: 'calc(var(--radius) * 1.4)',
-  '2xl': 'calc(var(--radius) * 1.8)',
-  '3xl': 'calc(var(--radius) * 2.2)',
-  '4xl': 'calc(var(--radius) * 2.6)',
+  xl: '8px',
+  /** Bottom sheet top corners */
+  sheet: '12px',
+  '2xl': '12px',
+  '3xl': '16px',
+  '4xl': '24px',
   full: '9999px',
 } as const
 

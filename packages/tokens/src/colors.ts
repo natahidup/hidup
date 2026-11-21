@@ -1,25 +1,35 @@
 /**
- * Platform-neutral color scales. Names follow Tailwind's palette conventions
- * so a future brand swap edits values here without renaming call sites.
- * The default shadcn neutral (zinc) scale; brand colors replace these later.
+ * Nata brand palette. Names follow Tailwind conventions so semantic tokens and
+ * a future mobile package can share the same keys.
  */
 export const colors = {
-  white: 'oklch(1 0 0)',
-  black: 'oklch(0 0 0)',
+  white: '#FFFFFF',
+  black: '#000000',
   transparent: 'transparent',
-  neutral: {
-    '50': 'oklch(0.985 0 0)',
-    '100': 'oklch(0.97 0 0)',
-    '200': 'oklch(0.922 0 0)',
-    '300': 'oklch(0.87 0 0)',
-    '400': 'oklch(0.708 0 0)',
-    '500': 'oklch(0.556 0 0)',
-    '600': 'oklch(0.439 0 0)',
-    '700': 'oklch(0.371 0 0)',
-    '800': 'oklch(0.269 0 0)',
-    '900': 'oklch(0.205 0 0)',
-    '950': 'oklch(0.145 0 0)',
-  },
+  /** Page canvas */
+  cream: '#FAF7F1',
+  /** Card / popover / secondary surface */
+  parchment: '#FFFDF8',
+  /** Input fill */
+  sand: '#EAE3D6',
+  /** Borders */
+  stone: '#D6CEC0',
+  /** Body ink */
+  ink: '#1B1B1F',
+  /** Secondary text */
+  mist: '#6B6660',
+  /** Primary indigo */
+  indigo: '#2E4A6B',
+  /** Primary pressed / hover */
+  indigoPressed: '#23395B',
+  /** Destructive / error */
+  crimson: '#9E1B1B',
+  /** Success */
+  fern: '#3E7C59',
+  /** Warning / mustard */
+  mustard: '#F0B23A',
+  /** Accent vermilion — ornament only, never large-surface text */
+  vermilion: '#E8452C',
 } as const
 
 export type Colors = typeof colors
