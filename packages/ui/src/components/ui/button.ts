@@ -17,16 +17,15 @@ export const buttonVariantKeys = [
 ] as const
 
 export const buttonVariants: Record<ButtonVariant, string> = {
-  default: 'bg-primary text-primary-foreground hover:bg-primary/80',
+  /** Solid indigo — no border, no shadow. */
+  default: 'border-0 bg-primary text-primary-foreground shadow-none hover:bg-primary-hover',
   destructive:
-    'bg-destructive/10 hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/20 text-destructive focus-visible:border-destructive/40 dark:hover:bg-destructive/30',
-  outline:
-    'border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground',
+    'border-0 bg-destructive text-destructive-foreground shadow-none hover:bg-destructive/90',
+  outline: 'border border-border bg-secondary text-secondary-foreground shadow-none hover:bg-muted',
   secondary:
-    'bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground',
-  ghost:
-    'hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 aria-expanded:bg-muted aria-expanded:text-foreground',
-  link: 'text-primary underline-offset-4 hover:underline',
+    'border border-border bg-secondary text-secondary-foreground shadow-none hover:bg-muted',
+  ghost: 'border-0 shadow-none hover:bg-muted hover:text-foreground',
+  link: 'border-0 bg-transparent text-primary shadow-none underline-offset-4 hover:underline',
 }
 
 export type ButtonVariant = (typeof buttonVariantKeys)[number]
@@ -44,21 +43,22 @@ export const buttonSizeKeys = [
 ] as const
 
 export const buttonSizes: Record<ButtonSize, string> = {
-  default: 'h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2',
-  xs: "h-6 gap-1 rounded-[min(var(--radius-md),10px)] px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
-  sm: "h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
-  lg: 'h-9 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2',
-  icon: 'size-8',
-  'icon-xs':
-    "size-6 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg [&_svg:not([class*='size-'])]:size-3",
-  'icon-sm': 'size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg',
-  'icon-lg': 'size-9',
+  /** Default primary control height is 48px. */
+  default:
+    "h-12 gap-2 px-4 has-data-[icon=inline-end]:pr-3 has-data-[icon=inline-start]:pl-3 [&_svg:not([class*='size-'])]:size-6",
+  xs: "h-8 gap-1 rounded-[var(--radius-chip)] px-2 text-xs has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-4",
+  sm: "h-10 gap-1.5 rounded-[var(--radius)] px-3 text-sm has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 [&_svg:not([class*='size-'])]:size-5",
+  lg: "h-12 gap-2 px-5 has-data-[icon=inline-end]:pr-4 has-data-[icon=inline-start]:pl-4 [&_svg:not([class*='size-'])]:size-6",
+  icon: "size-12 [&_svg:not([class*='size-'])]:size-6",
+  'icon-xs': "size-8 rounded-[var(--radius-chip)] [&_svg:not([class*='size-'])]:size-4",
+  'icon-sm': "size-10 rounded-[var(--radius)] [&_svg:not([class*='size-'])]:size-5",
+  'icon-lg': "size-12 [&_svg:not([class*='size-'])]:size-6",
 }
 
 export type ButtonSize = (typeof buttonSizeKeys)[number]
 
 const buttonBase =
-  "focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 rounded-lg border border-transparent bg-clip-padding text-sm font-medium focus-visible:ring-3 aria-invalid:ring-3 active:not-aria-[haspopup]:translate-y-px [&_svg:not([class*='size-'])]:size-4 group/button inline-flex shrink-0 items-center justify-center whitespace-nowrap transition-all outline-none select-none [&_svg]:pointer-events-none [&_svg]:shrink-0 disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-disabled:pointer-events-none data-disabled:opacity-50"
+  "font-mono text-sm font-bold uppercase tracking-[0.08em] focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 aria-invalid:border-destructive rounded-[var(--radius)] bg-clip-padding focus-visible:ring-3 aria-invalid:ring-3 active:not-aria-[haspopup]:translate-y-px [&_svg:not([class*='size-'])]:size-6 group/button inline-flex shrink-0 items-center justify-center whitespace-nowrap transition-colors outline-none select-none shadow-none [&_svg]:pointer-events-none [&_svg]:shrink-0 disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-disabled:pointer-events-none data-disabled:opacity-50"
 
 export type ButtonConfig<M> = Readonly<{
   onClick?: M

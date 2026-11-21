@@ -96,8 +96,9 @@ export const toastVariantClass = (variant: Variant): string =>
  *  below the card so the pointer can cross between stacked layers without a
  *  dead zone, exactly like the reference root class. Entries beyond `LIMIT`
  *  render with `data-limited` and are fully hidden until a slot frees up. */
+/** Toast: ink surface, white text, flat (no shadow). */
 export const toastEntryClass =
-  'pointer-events-auto absolute right-0 bottom-0 w-80 origin-bottom rounded-lg border bg-popover text-popover-foreground shadow-lg [transform:translateZ(0)] [contain:layout] [backface-visibility:hidden] outline-none select-none after:absolute after:top-full after:left-0 after:h-[calc(0.75rem+1px)] after:w-full after:content-[""] [transition:transform_350ms_cubic-bezier(0.22,1,0.36,1),opacity_350ms] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 data-[limited]:pointer-events-none data-[limited]:opacity-0'
+  'pointer-events-auto absolute right-0 bottom-0 w-80 origin-bottom rounded-[var(--radius)] border border-foreground bg-foreground text-primary-foreground shadow-none [transform:translateZ(0)] [contain:layout] [backface-visibility:hidden] outline-none select-none after:absolute after:top-full after:left-0 after:h-[calc(0.75rem+1px)] after:w-full after:content-[""] [transition:transform_350ms_cubic-bezier(0.22,1,0.36,1),opacity_350ms] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 data-[limited]:pointer-events-none data-[limited]:opacity-0'
 
 /** Entry wrapper — the element foldkit drives the swipe gesture on. The corner
  *  anchor lives here because a non-`none` `translate` makes this wrapper the
@@ -114,12 +115,12 @@ export const toastEntryWrapperClass =
 export const toastContentClass =
   'flex h-full w-full items-center gap-3 overflow-hidden p-4 transition-opacity duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] data-[behind]:opacity-0 data-[expanded]:opacity-100'
 
-export const toastTitleClass = 'text-sm font-medium'
+export const toastTitleClass = 'text-sm font-medium text-primary-foreground'
 
-export const toastDescriptionClass = 'text-sm text-muted-foreground'
+export const toastDescriptionClass = 'text-sm text-primary-foreground/80'
 
 export const toastDismissButtonClass =
-  "relative shrink-0 cursor-pointer rounded-md p-1 text-muted-foreground opacity-70 transition-opacity hover:text-foreground hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0 after:absolute after:-inset-2 after:content-['']"
+  "relative shrink-0 cursor-pointer rounded-[var(--radius)] p-1 text-primary-foreground opacity-70 transition-opacity hover:text-primary-foreground hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0 after:absolute after:-inset-2 after:content-['']"
 
 export const toastActionClass = 'shrink-0'
 

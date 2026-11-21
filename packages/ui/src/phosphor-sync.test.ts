@@ -29,9 +29,9 @@ const pathFromSvg = (svg: string): string => {
   return match[1]
 }
 
-test('Phosphor icon nodes match @phosphor-icons/core regular SVGs', () => {
+test('Phosphor icon nodes match @phosphor-icons/core thin SVGs', () => {
   for (const [exportName, file] of Object.entries(catalog)) {
-    const svg = readFileSync(join(coreRoot, 'assets/regular', `${file}.svg`), 'utf8')
+    const svg = readFileSync(join(coreRoot, 'assets/thin', `${file}-thin.svg`), 'utf8')
     const expected = pathFromSvg(svg)
     const node = Phosphor[exportName as keyof typeof catalog]
     expect(node[0]?.[0]).toBe('path')

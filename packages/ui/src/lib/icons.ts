@@ -4,8 +4,8 @@ import type { IconAttrs, IconNode } from './phosphor.ts'
 /**
  * Render a Phosphor icon as Foldkit virtual DOM.
  *
- * Icon nodes come from `@phosphor-icons/core` regular SVGs (see `phosphor.ts`).
- * Do not add lucide — use Phosphor equivalents instead.
+ * Icon nodes come from `@phosphor-icons/core` thin SVGs (see `phosphor.ts`).
+ * Default size is 24px. Do not add lucide — use Phosphor equivalents instead.
  *
  * ```ts
  * import { icon } from '@nata/ui/lib/icons'
@@ -54,7 +54,7 @@ const nodeToAttributes = <M>(
 ): ReadonlyArray<Attribute<M> | ChildAttribute> =>
   Object.entries(attrs).map(([name, value]) => h.Attribute(name, String(value)))
 
-const defaultIconClass = 'size-4 shrink-0'
+const defaultIconClass = 'size-6 shrink-0'
 
 export type IconPosition = 'inline-start' | 'inline-end'
 
