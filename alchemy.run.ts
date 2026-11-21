@@ -3,7 +3,7 @@ import { sentryRollupPlugin } from '@sentry/rollup-plugin'
 import * as Alchemy from 'alchemy'
 import * as Effect from 'effect/Effect'
 import * as Layer from 'effect/Layer'
-import { API_PREFIX } from '@nata/rpc/karir'
+import { API_PREFIX, WEB_BASE } from '@nata/rpc/karir'
 
 const compatibility = { date: '2026-10-08' }
 // The Sentry SDK in the API and website Workers needs AsyncLocalStorage, which
@@ -49,9 +49,10 @@ const apiBuild = {
 }
 
 /**
- * Per-IP limits at the website Worker, before a request reaches the API. A
- * single app rarely makes more than a handful of API calls a minute. Change the
- * namespace IDs to values that are unique in your Cloudflare account.
+ * Per-IP limits on the karir API Worker. Requests may arrive through the
+ * website service binding (local) or the /api/karir* Workers Route (prod). A
+ * single module rarely makes more than a handful of API calls a minute. Change
+ * the namespace ID to a value that is unique in your Cloudflare account.
  */
 const rateLimits = {
   RATE_LIMIT_API: Cloudflare.RateLimit('RateLimitApi', {
@@ -85,30 +86,41 @@ export default Alchemy.Stack(
   { providers: Cloudflare.providers(), state },
   Effect.gen(function* () {
     const stage = yield* Alchemy.Stack.use((stack) => Effect.succeed(stack.stage))
-    const ApiWorker = Cloudflare.Worker('Api', {
+    const zoneName = 'natahidup.app'
+    // Path routes for the Nata super app. Patterns use a trailing `*` so
+    // /karir and /api/karir match without requiring a slash (Alchemy federated
+    // APIs). Attach only on prod; local alchemy keeps the service binding.
+    const karirWebRoutes =
+      stage === 'prod' ? [{ pattern: `${zoneName}${WEB_BASE}*`, zoneName }] : undefined
+    const karirApiRoutes =
+      stage === 'prod' ? [{ pattern: `${zoneName}${API_PREFIX}*`, zoneName }] : undefined
+
+    const KarirApi = Cloudflare.Worker('KarirApi', {
       main: './services/karir/src/worker.ts',
       // A stable local URL for the service binding. The website takes 5173.
       dev: { port: 1337 },
-      env: { ...sentryEnv },
+      env: { ...sentryEnv, ...rateLimits },
       ...apiBuild,
       compatibility: sentryCompatibility,
       observability,
-      // The website reaches the API through its service binding only. Remove
-      // this when the API needs its own public URL or custom domain.
+      ...(karirApiRoutes ? { routes: karirApiRoutes } : {}),
+      // Locally the website reaches the API through its service binding. In
+      // production, Workers Routes also send /api/karir* here directly.
       workersDev: false,
     })
-    const Website = Cloudflare.Website.Foldkit('Website', {
-      rootDir: stage === 'reference' ? 'examples/reference' : 'apps/karir',
+    const KarirWebsite = Cloudflare.Website.Foldkit('KarirWebsite', {
+      rootDir: 'apps/karir',
       main: 'src/worker.ts',
       dev: { port: 5173 },
-      env: { API: ApiWorker, ...sentryEnv, ...rateLimits },
+      env: { API: KarirApi, ...sentryEnv },
       assets: { runWorkerFirst: [`${API_PREFIX}/*`] },
       compatibility: sentryCompatibility,
       observability,
+      ...(karirWebRoutes ? { routes: karirWebRoutes } : {}),
     })
 
-    yield* ApiWorker
-    const website = yield* Website
+    yield* KarirApi
+    const website = yield* KarirWebsite
     return { url: website.url }
   }),
 )

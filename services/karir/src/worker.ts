@@ -1,7 +1,23 @@
 import * as Sentry from '@sentry/cloudflare'
-import { handler, type Env } from './handler.ts'
+import { handler, type Env, type RateLimitBinding } from './handler.ts'
 
 export type { Env }
+
+/** A limiter that fails open: an outage in the rate limiter must not stop the app. */
+const allowed = async (binding: RateLimitBinding | undefined, key: string): Promise<boolean> => {
+  if (binding === undefined) return true
+  try {
+    return (await binding.limit({ key })).success
+  } catch {
+    return true
+  }
+}
+
+const tooMany = (): Response =>
+  new Response('Too many requests. Try again in a minute.', {
+    status: 429,
+    headers: { 'Retry-After': '60', 'Content-Type': 'text/plain; charset=utf-8' },
+  })
 
 export default Sentry.withSentry(
   (env: Env) => ({
@@ -15,6 +31,10 @@ export default Sentry.withSentry(
   {
     // The incoming request carries the browser's trace headers. The service binding passes the
     // same headers on, so one trace covers the browser, the website Worker, and the API Worker.
-    fetch: (request: Request) => handler.handler(request),
+    async fetch(request: Request, env: Env): Promise<Response> {
+      const ip = request.headers.get('CF-Connecting-IP') ?? 'unknown'
+      if (!(await allowed(env.RATE_LIMIT_API, ip))) return tooMany()
+      return handler.handler(request)
+    },
   },
 )

@@ -9,13 +9,20 @@ import { RpcSerialization, RpcServer } from 'effect/rpc'
 import { Api, ApiError, RPC_PATH } from '@nata/rpc/karir'
 import { SystemHandlers } from './contexts/system/handlers.ts'
 
+/** The part of Cloudflare's Rate Limit binding this Worker uses. */
+export type RateLimitBinding = Readonly<{
+  limit: (options: { key: string }) => Promise<{ success: boolean }>
+}>
+
 /**
  * The bindings the stack gives the API Worker. Sentry is optional: without a DSN
- * the SDK stays off and the Worker still serves the contract.
+ * the SDK stays off and the Worker still serves the contract. `RATE_LIMIT_API`
+ * is optional so local tests can omit it; when present it fails open.
  */
 export type Env = Readonly<{
   SENTRY_DSN?: string
   SENTRY_RELEASE?: string
+  RATE_LIMIT_API?: RateLimitBinding
 }>
 
 /**

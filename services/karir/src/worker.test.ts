@@ -8,6 +8,7 @@ import { Rpc, RpcClient, RpcGroup, RpcSerialization, RpcServer } from 'effect/rp
 import { expect, test } from 'vitest'
 import { Api, ApiError, RPC_PATH, SystemRpc } from '@nata/rpc/karir'
 import { handler, handlerFor } from './handler.ts'
+import worker from './worker.ts'
 
 const url = `http://api.test${RPC_PATH}`
 
@@ -124,4 +125,28 @@ test('a declared ApiError crosses the RPC transport', async () => {
   )
 
   expect(failure).toMatchObject({ _tag: 'ApiError', message: 'Declared failure' })
+})
+
+test('the API Worker refuses a request over the per-IP limit', async () => {
+  const response = await worker.fetch(
+    new Request('http://api.test/api/karir/rpc', { method: 'POST' }),
+    {
+      RATE_LIMIT_API: {
+        limit: () => Promise.resolve({ success: false }),
+      },
+    },
+  )
+
+  expect(response.status).toBe(429)
+  expect(response.headers.get('Retry-After')).toBe('60')
+})
+
+test('the rate limiter fails open', async () => {
+  const response = await worker.fetch(new Request('http://api.test/unknown', { method: 'POST' }), {
+    RATE_LIMIT_API: {
+      limit: () => Promise.reject(new Error('The limiter is down.')),
+    },
+  })
+
+  expect(response.status).toBe(404)
 })
