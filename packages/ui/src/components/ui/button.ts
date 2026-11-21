@@ -1,5 +1,5 @@
 import { Button as FoldkitButton } from '@foldkit/ui'
-import type { Attribute, Html, HtmlBuilder } from 'foldkit/html'
+import type { Attribute, ChildAttribute, Html, HtmlBuilder } from 'foldkit/html'
 
 import { defined } from '../../lib/optional.ts'
 import { cn } from '../../lib/utils.ts'
@@ -72,8 +72,8 @@ export type ButtonConfig<M> = Readonly<{
   size?: ButtonSize
   className?: string
   /** Extra attributes merged onto the button element (ids, handlers,
-   *  popoover anchors, …). */
-  attributes?: ReadonlyArray<Attribute<M>>
+   *  popover anchors, dialog close bundles, …). */
+  attributes?: ReadonlyArray<Attribute<M> | ChildAttribute>
 }>
 
 export type ButtonLabel = Html | string | ReadonlyArray<Html | string>
