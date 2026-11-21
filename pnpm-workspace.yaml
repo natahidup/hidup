@@ -2,7 +2,6 @@ packages:
   - apps/*
   - services/*
   - packages/*
-  - examples/*
 allowBuilds:
   lefthook: true
   workerd: true

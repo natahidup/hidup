@@ -4,9 +4,8 @@
   "license": "GPL-3.0-or-later",
   "type": "module",
   "scripts": {
-    "prepare": "lefthook install",
+    "prepare": "lefthook install --force",
     "dev": "alchemy dev",
-    "dev:reference": "alchemy dev --stage reference",
     "build": "turbo run build",
     "check": "vp check",
     "fmt": "vp fmt",
