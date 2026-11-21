@@ -6,19 +6,22 @@ import { expect, test } from 'vitest'
 
 const appRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
 
-/** Utilities that must appear when Tailwind scans @nata/ui. */
+/**
+ * Selectors that must appear when Tailwind scans @nata/ui.
+ * Use the exact escaped forms Vite emits (e.g. `.px-\(--card-spacing\)`).
+ */
 const requiredUtilities = [
-  '.bg-primary',
+  '.bg-primary{',
   '.text-primary-foreground',
   '.bg-destructive',
   '.bg-muted',
-  '.bg-card',
-  '.border-border',
-  '.h-12',
-  '.min-h-14',
-  '.p-6',
-  '.px-\\(--card-spacing\\)',
-  '.rounded-\\[var\\(--radius\\)\\]',
+  '.bg-card{',
+  '.border-border{',
+  '.h-12{',
+  '.min-h-14{',
+  '.p-6{',
+  String.raw`.px-\(--card-spacing\){`,
+  String.raw`.rounded-\[var\(--radius\)\]{`,
 ] as const
 
 test('built CSS includes @nata/ui brand utilities', () => {
@@ -33,7 +36,7 @@ test('built CSS includes @nata/ui brand utilities', () => {
   const css = readFileSync(join(appRoot, 'dist/assets', cssName!), 'utf8')
 
   for (const utility of requiredUtilities) {
-    expect(css, `missing utility ${utility}`).toMatch(new RegExp(utility.replace(/^\./, '\\.')))
+    expect(css.includes(utility), `missing utility ${utility}`).toBe(true)
   }
 
   // Viewport height must not be collapsed by a custom spacing-screen token.
