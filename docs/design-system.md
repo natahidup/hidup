@@ -2,10 +2,10 @@
 
 ## Tokens vs UI
 
-| Package        | Role                                                                                                                                                                                                        |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `@nata/tokens` | Platform-neutral TypeScript source of truth for color, spacing, radius, typography, shadows, and shadcn semantic tokens (light/dark). Emits `tokens.css` (`:root` / `.dark` + Tailwind v4 `@theme inline`). |
-| `@nata/ui`     | Foldkit foldcn components built on `@foldkit/ui`. Imports theme from `@nata/tokens` — no duplicated CSS variables.                                                                                          |
+| Package        | Role                                                                                                                                                                                                                                                                                      |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@nata/tokens` | Platform-neutral TypeScript source of truth for the Nata brand palette, spacing, radius, typography, shadows, and shadcn semantic tokens (plus `success` / `warning`). Emits `tokens.css` (`:root` / `.dark` + Tailwind v4 `@theme inline`). Light is designed; `.dark` is a TODO mirror. |
+| `@nata/ui`     | Foldkit foldcn components built on `@foldkit/ui`. Imports theme from `@nata/tokens` — no duplicated CSS variables.                                                                                                                                                                        |
 
 A future mobile package should import TypeScript tokens from `@nata/tokens`, not the CSS entry. Brand colors change by editing token modules only, then regenerating CSS.
 
@@ -41,8 +41,12 @@ foldcn is a shadcn-compatible registry for Foldkit ([docs](https://foldcn.eliani
 
 ## Phosphor rule
 
-Use `@phosphor-icons/core` (SVG path assets, no React). Do not install `lucide`. Icon nodes in `packages/ui/src/lib/phosphor.ts` are kept in sync with the package's regular SVGs by `phosphor-sync.test.ts`. Render them with `icon()` from `packages/ui/src/lib/icons.ts` (256×256 viewBox, `fill="currentColor"`).
+Use `@phosphor-icons/core` thin-weight SVG path assets (no React). Do not install `lucide`. Icon nodes in `packages/ui/src/lib/phosphor.ts` are kept in sync with the package's thin SVGs by `phosphor-sync.test.ts`. Render them with `icon()` from `packages/ui/src/lib/icons.ts` (256×256 viewBox, `fill="currentColor"`, default 24px).
+
+## Typography
+
+Space Grotesk (display/body) and Space Mono (labels/captions/buttons) load via a Google Fonts `<link>` in `apps/karir/index.html` — no `@fontsource` package. Button labels use mono, bold, uppercase, `letter-spacing: 0.08em`.
 
 ## Showcase
 
-`apps/karir` exposes an internal gallery at `/karir/dev/ui` (Vite base `/karir`) when `import.meta.env.DEV` is true, or when `VITE_UI_SHOWCASE=true`. Flags live in `apps/karir/src/platform/flags.ts`.
+`apps/karir` exposes an internal gallery at `/karir/dev/ui` (Vite base `/karir`) when `import.meta.env.DEV` is true, or when `VITE_UI_SHOWCASE=true`. Flags live in `apps/karir/src/platform/flags.ts`. Light mode only until dark tokens are designed.

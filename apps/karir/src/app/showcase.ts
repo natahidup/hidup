@@ -1,4 +1,4 @@
-import { Effect, Schema } from 'effect'
+import { Schema } from 'effect'
 import * as Command from 'foldkit/command'
 import type { Document, Html, HtmlBuilder } from 'foldkit/html'
 import { defineMessageUnion } from 'foldkit/message'
@@ -15,7 +15,6 @@ type ShowcaseToastMessage = typeof ShowcaseToast.Message.Type
 const ActionMenu = Menu.create<'Profile' | 'Settings' | 'Sign out'>()
 
 export const Model = Schema.Struct({
-  dark: Schema.Boolean,
   name: Schema.String,
   dialog: Dialog.Model,
   menu: Menu.Model,
@@ -24,8 +23,6 @@ export const Model = Schema.Struct({
 export type Model = typeof Model.Type
 
 export const Message = defineMessageUnion({
-  ThemeApplied: {},
-  ClickedToggleTheme: {},
   TypedName: { value: Schema.String },
   ClickedOpenDialog: {},
   GotDialogMessage: { message: Dialog.Message },
@@ -34,15 +31,6 @@ export const Message = defineMessageUnion({
   ClickedShowToast: {},
 })
 export type Message = typeof Message.Type
-
-const ApplyTheme = Command.define('ApplyTheme', {
-  args: { dark: Schema.Boolean },
-  messages: [Message.ThemeApplied],
-  execute: ({ dark }) =>
-    Effect.sync(() => {
-      document.documentElement.classList.toggle('dark', dark)
-    }).pipe(Effect.as(Message.ThemeApplied())),
-})
 
 const mapDialogCommands = (commands: Commands<Dialog.Message> | undefined) =>
   Command.mapMessages(commands ?? [], (dialogMessage) =>
@@ -61,25 +49,15 @@ const mapToastCommands = (commands: Commands<ShowcaseToastMessage> | undefined) 
 
 export const init = (): UpdateReturn<Model, Message> => ({
   model: Model.make({
-    dark: false,
     name: '',
     dialog: Dialog.init({ id: 'showcase-dialog' }),
     menu: Menu.init({ id: 'showcase-menu' }),
     toast: ShowcaseToast.init({ id: 'showcase-toast' }),
   }),
-  commands: [ApplyTheme({ dark: false })],
 })
 
 export const update = (model: Model, message: Message): UpdateReturn<Model, Message> =>
   Message.match(message, {
-    ThemeApplied: () => ({ model }),
-    ClickedToggleTheme: () => {
-      const dark = !model.dark
-      return {
-        model: modifyFields(model, { dark: () => dark }),
-        commands: [ApplyTheme({ dark })],
-      }
-    },
     TypedName: ({ value }) => ({
       model: modifyFields(model, { name: () => value }),
     }),
@@ -324,22 +302,24 @@ export const view = (model: Model, h: HtmlBuilder<Message>): Document => ({
         ],
         [
           h.div(
-            [h.Class('mx-auto flex max-w-3xl items-center justify-between gap-3')],
+            [h.Class('mx-auto flex max-w-3xl items-center gap-3')],
             [
               h.div(
                 [h.Class('flex flex-col')],
                 [
                   h.p(
-                    [h.Class('text-xs font-medium tracking-wide text-muted-foreground')],
+                    [
+                      h.Class(
+                        'font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground',
+                      ),
+                    ],
                     ['INTERNAL'],
                   ),
-                  h.h1([h.Class('text-lg font-semibold tracking-tight')], ['Nata UI showcase']),
+                  h.h1(
+                    [h.Class('font-heading text-[1.75rem] font-bold leading-[2.125rem]')],
+                    ['Nata UI showcase'],
+                  ),
                 ],
-              ),
-              button(
-                { variant: 'outline', size: 'sm', onClick: Message.ClickedToggleTheme() },
-                model.dark ? 'Light' : 'Dark',
-                h,
               ),
             ],
           ),
@@ -349,23 +329,10 @@ export const view = (model: Model, h: HtmlBuilder<Message>): Document => ({
         [h.Class('mx-auto flex max-w-3xl flex-col gap-10 px-4 py-8')],
         [
           h.p(
-            [h.Class('text-sm text-muted-foreground')],
-            [
-              'Mobile-first gallery of @nata/ui. Light and dark panels below; use the toggle for a full-page theme.',
-            ],
+            [h.Class('text-base leading-6 text-muted-foreground')],
+            ['Mobile-first gallery of @nata/ui on the Nata brand tokens (light mode).'],
           ),
-          h.section(
-            [h.Class('rounded-xl border border-border bg-background p-4 sm:p-6')],
-            [h.h2([h.Class('mb-4 text-base font-semibold')], ['Light']), componentPanel(model, h)],
-          ),
-          h.section(
-            [
-              h.Class(
-                'dark rounded-xl border border-border bg-background p-4 text-foreground sm:p-6',
-              ),
-            ],
-            [h.h2([h.Class('mb-4 text-base font-semibold')], ['Dark']), componentPanel(model, h)],
-          ),
+          componentPanel(model, h),
         ],
       ),
     ],
