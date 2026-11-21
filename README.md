@@ -29,6 +29,9 @@ The starter also includes:
   platform adapters, served under `/api/karir`.
 - `packages/rpc` — one wire-contract package with a subdirectory per module
   (`@nata/rpc/karir`).
+- `packages/tokens` — design tokens (TypeScript + `tokens.css`).
+- `packages/ui` — foldcn components for Foldkit (Phosphor icons, theme from
+  tokens).
 - Future: `apps/www` (landing) and `apps/mobile` are planned and not scaffolded
   yet.
 

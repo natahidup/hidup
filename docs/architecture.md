@@ -40,6 +40,9 @@ Future modules (for example `/uang`, `/kencan`) follow the same shape:
 matching Workers Routes. `apps/www` (landing) and `apps/mobile` are planned and
 not scaffolded yet.
 
+`packages/tokens` owns design tokens. `packages/ui` owns foldcn components and
+consumes tokens. See [Design system](design-system.md).
+
 ## Request routing
 
 `packages/rpc/src/karir/paths.ts` owns `WEB_BASE`, `API_PREFIX`, and

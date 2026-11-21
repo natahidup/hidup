@@ -17,6 +17,10 @@ super app deployed to Cloudflare with Alchemy. Modules share the
 - `packages/rpc` is one package (`@nata/rpc`) with a subdirectory per module
   (for example `packages/rpc/src/karir/...`), exposed via package exports
   subpaths such as `@nata/rpc/karir`.
+- `packages/tokens` (`@nata/tokens`) is the platform-neutral design-token
+  source of truth (TypeScript + generated `tokens.css`).
+- `packages/ui` (`@nata/ui`) owns foldcn / `@foldkit/ui` components. Theme
+  variables come from `@nata/tokens` only.
 - Future surfaces such as `apps/www` (landing) and `apps/mobile` are planned
   but not scaffolded here.
 - Keep Alchemy resources and deployment composition in the root
@@ -53,6 +57,13 @@ super app deployed to Cloudflare with Alchemy. Modules share the
   `tsgo`; do not add `typescript` or turn on `typeCheck` in `vite.config.ts`.
 - Effect diagnostics run in `pnpm typecheck`. `vp lint` stays on Vite+'s tsrs
   backend, so do not patch Oxlint.
+- Design tokens: edit TypeScript in `@nata/tokens`, run
+  `pnpm --filter @nata/tokens generate`, keep components on semantic CSS
+  variables (no hardcoded colors).
+- UI icons: use Phosphor via `@phosphor-icons/core` path nodes in `@nata/ui`.
+  Do not install or import `lucide`.
+- Foldkit only for web UI — not React. Add foldcn components with the `shadcn`
+  CLI against the `@foldcn` registry (see `docs/design-system.md`).
 - Run `pnpm rename <name>` once, before the first feature, to replace the
   template's package scope and stack name.
 
@@ -71,9 +82,10 @@ super app deployed to Cloudflare with Alchemy. Modules share the
 
 See `docs/architecture.md` and `docs/tooling.md` before changing workspace
 boundaries or tool ownership. `docs/guardrails.md` lists the rules this
-repository enforces and the check behind each one. `docs/recipes.md` shows the
-D1 and binding path, `docs/deploy.md` covers deployment, and
-`docs/production.md` covers the launch baseline.
+repository enforces and the check behind each one. `docs/design-system.md`
+covers tokens vs ui, foldcn, and Phosphor. `docs/recipes.md` shows the D1 and
+binding path, `docs/deploy.md` covers deployment, and `docs/production.md`
+covers the launch baseline.
 
 <!-- BEGIN:turborepo-agent-rules -->
 
