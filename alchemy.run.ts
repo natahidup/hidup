@@ -24,7 +24,7 @@ const sentryEnv = {
 
 /**
  * Source maps for the API Worker. The website build uploads its own through the
- * Sentry plugin in `apps/web/vite.config.ts`. Both need `SENTRY_AUTH_TOKEN`, and
+ * Sentry plugin in `apps/karir/vite.config.ts`. Both need `SENTRY_AUTH_TOKEN`, and
  * read `SENTRY_ORG` and `SENTRY_PROJECT` from the environment. Without all three,
  * nothing uploads.
  */
@@ -98,7 +98,7 @@ export default Alchemy.Stack(
       workersDev: false,
     })
     const Website = Cloudflare.Website.Foldkit('Website', {
-      rootDir: stage === 'reference' ? 'examples/reference' : 'apps/web',
+      rootDir: stage === 'reference' ? 'examples/reference' : 'apps/karir',
       main: 'src/worker.ts',
       dev: { port: 5173 },
       env: { API: ApiWorker, ...sentryEnv, ...rateLimits },

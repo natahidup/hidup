@@ -27,7 +27,7 @@ export const startSentry = (): void => {
     profileLifecycle: 'trace',
     // Trace headers go to this origin's API only.
     tracePropagationTargets: [`${API_PREFIX}/`],
-    initialScope: { tags: { service: 'web' } },
+    initialScope: { tags: { service: 'karir-web' } },
   })
 }
 

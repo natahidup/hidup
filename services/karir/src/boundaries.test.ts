@@ -6,7 +6,7 @@ import { expect, test } from 'vitest'
 const sourceRoot = dirname(fileURLToPath(import.meta.url))
 const repositoryRoot = join(sourceRoot, '../../..')
 const contextsRoot = join(sourceRoot, 'contexts')
-const webRoot = join(repositoryRoot, 'apps/web/src')
+const webRoot = join(repositoryRoot, 'apps/karir/src')
 const rpcRoot = join(repositoryRoot, 'packages/rpc/src')
 
 /** Adapters the deployment owns; contexts must stay platform-agnostic. */

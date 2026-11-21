@@ -10,7 +10,7 @@ export default Sentry.withSentry(
     // Sentry owns traces; Cloudflare Workers Observability keeps logs only (see `alchemy.run.ts`).
     // A request follows the browser's choice; one without a trace header is sampled on its own.
     tracesSampler: ({ parentSampled }) => parentSampled ?? 0.1,
-    initialScope: { tags: { service: 'api-worker' } },
+    initialScope: { tags: { service: 'karir-api-worker' } },
   }),
   {
     // The incoming request carries the browser's trace headers. The service binding passes the

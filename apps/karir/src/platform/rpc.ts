@@ -4,14 +4,14 @@ import { Http } from 'foldkit'
 import { Api, RPC_PATH } from '@nata/rpc'
 
 /**
- * The API Worker's RPC client, reached through the website origin. The
- * `apps/web/tsconfig.json` override allows `effect/rpc` in this folder only,
+ * The karir API Worker's RPC client, reached through the website origin. The
+ * `apps/karir/tsconfig.json` override allows `effect/rpc` in this folder only,
  * because the client is the one place the browser touches an unstable API.
  */
 export class ApiRpc extends Context.Service<
   ApiRpc,
   RpcClient.FromGroup<typeof Api, RpcClientError.RpcClientError>
->()('nata/web/ApiRpc') {
+>()('nata/karir/ApiRpc') {
   static readonly layer = Layer.effect(ApiRpc, RpcClient.make(Api)).pipe(
     Layer.provide(RpcClient.layerProtocolHttp({ url: RPC_PATH })),
     Layer.provide(RpcSerialization.layerJson),

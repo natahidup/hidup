@@ -44,7 +44,7 @@ export default Sentry.withSentry(
     release: env.SENTRY_RELEASE,
     // Only a browser trace is continued. A request without one starts none.
     tracesSampler: ({ parentSampled }) => (parentSampled ? 1 : 0),
-    initialScope: { tags: { service: 'website-worker' } },
+    initialScope: { tags: { service: 'karir-website-worker' } },
   }),
   {
     // The incoming request carries the browser's trace headers. The service binding passes the

@@ -24,25 +24,25 @@ export const update = (model: Model, message: Message) =>
   })
 
 export const view = (model: Model, h: HtmlBuilder<Message>): Document => ({
-  title: 'Nata',
+  title: 'NataKarir',
   body: h.main(
     [h.Class('page')],
     [
-      h.p([h.Class('eyebrow')], ['EFFECT · FOLDKIT · CLOUDFLARE']),
-      h.h1([], ['Your application starts here.']),
+      h.p([h.Class('eyebrow')], ['NATA · KARIR']),
+      h.h1([], ['NataKarir']),
       h.p(
         [h.Class('description')],
         [
           model.ready
-            ? 'The web app is ready for your product domains.'
-            : 'The web and API Workers are separate apps, composed by Alchemy.',
+            ? 'NataKarir is ready for its product domains.'
+            : 'This module is served under /karir with its API under /api/karir.',
         ],
       ),
       h.section(
         [h.Class('card')],
         [
           h.h2([], ['A clean starting point']),
-          h.p([], ['Use the reference example to explore the RPC and Foldkit Query flow.']),
+          h.p([], ['Extend the karir RPC contract, then wire handlers in services/karir.']),
           model.ready
             ? h.p(
                 [h.Class('status'), h.Role('status'), h.AriaLive('polite')],
