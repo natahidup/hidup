@@ -4,7 +4,7 @@ import type { Document, Html, HtmlBuilder } from 'foldkit/html'
 import { defineMessageUnion } from 'foldkit/message'
 import { modifyFields } from 'foldkit/struct'
 import type { Commands, Return as UpdateReturn } from 'foldkit/update'
-import { badge, button, Card, icon, input, label, skeleton, X } from '@nata/ui'
+import { badge, button, Card, icon, input, skeleton, X } from '@nata/ui'
 import * as Dialog from '@nata/ui/components/ui/dialog'
 import * as Menu from '@nata/ui/components/ui/menu'
 import * as Toast from '@nata/ui/components/ui/toast'
@@ -47,14 +47,44 @@ const mapToastCommands = (commands: Commands<ShowcaseToastMessage> | undefined) 
     Message.GotToastMessage({ message: toastMessage }),
   )
 
-export const init = (): UpdateReturn<Model, Message> => ({
-  model: Model.make({
-    name: '',
-    dialog: Dialog.init({ id: 'showcase-dialog' }),
-    menu: Menu.init({ id: 'showcase-menu' }),
-    toast: ShowcaseToast.init({ id: 'showcase-toast' }),
-  }),
-})
+/** `?demo=1` opens dialog + toast so screenshots capture those surfaces. */
+export const isDemoPreview = (): boolean => {
+  if (typeof globalThis.location !== 'object' || globalThis.location === null) return false
+  return new URLSearchParams(globalThis.location.search).get('demo') === '1'
+}
+
+export const init = (): UpdateReturn<Model, Message> => {
+  const demo = isDemoPreview()
+  const dialogBoot = demo
+    ? Dialog.boot({ id: 'showcase-dialog', isAnimated: false })
+    : { model: Dialog.init({ id: 'showcase-dialog' }), commands: [] as const }
+
+  let toast = ShowcaseToast.init({ id: 'showcase-toast' })
+  let toastCommands: Commands<ShowcaseToastMessage> = []
+  if (demo) {
+    const shown = ShowcaseToast.show(toast, {
+      variant: 'Info',
+      payload: { title: 'Nata UI toast' },
+      // Stay visible for screenshots / walkthroughs.
+      duration: { days: 1 },
+    })
+    toast = shown.model
+    toastCommands = shown.commands ?? []
+  }
+
+  return {
+    model: Model.make({
+      name: demo ? 'Ada Lovelace' : '',
+      dialog: dialogBoot.model,
+      menu: Menu.init({ id: 'showcase-menu' }),
+      toast,
+    }),
+    commands: [
+      ...mapDialogCommands('commands' in dialogBoot ? dialogBoot.commands : undefined),
+      ...mapToastCommands(toastCommands),
+    ],
+  }
+}
 
 export const update = (model: Model, message: Message): UpdateReturn<Model, Message> =>
   Message.match(message, {
@@ -139,14 +169,24 @@ const componentPanel = (model: Model, h: HtmlBuilder<Message>): Html =>
             {
               id: 'showcase-name',
               label: 'Name',
-              description: 'Uses the foldcn input + label styles.',
+              description: 'Parchment field with mono label and Grotesk value.',
               value: model.name,
               onInput: (value) => Message.TypedName({ value }),
               placeholder: 'Your name',
             },
             h,
           ),
-          label({ forId: 'showcase-standalone' }, ['Standalone label'], h),
+          input(
+            {
+              id: 'showcase-name-error',
+              label: 'Email',
+              value: 'not-an-email',
+              isInvalid: true,
+              error: 'Enter a valid email address.',
+              placeholder: 'you@nata.id',
+            },
+            h,
+          ),
         ],
         h,
       ),

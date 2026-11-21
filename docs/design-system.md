@@ -47,6 +47,13 @@ Use `@phosphor-icons/core` thin-weight SVG path assets (no React). Do not instal
 
 Space Grotesk (display/body) and Space Mono (labels/captions/buttons) load via a Google Fonts `<link>` in `apps/karir/index.html` — no `@fontsource` package. Button labels use mono, bold, uppercase, `letter-spacing: 0.08em`.
 
+## Tailwind source scanning
+
+`apps/karir/src/styles.css` registers `@source '../../../packages/ui/src'` so
+utilities that appear only inside `@nata/ui` are generated. `packages/ui`'s own
+`styles.css` also uses `@source '.'`. A karir test fails the build CSS when key
+utilities such as `.bg-primary` are missing.
+
 ## Showcase
 
 `apps/karir` exposes an internal gallery at `/karir/dev/ui` (Vite base `/karir`) when `import.meta.env.DEV` is true, or when `VITE_UI_SHOWCASE=true`. Flags live in `apps/karir/src/platform/flags.ts`. Light mode only until dark tokens are designed.
