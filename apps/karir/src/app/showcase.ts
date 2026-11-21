@@ -316,14 +316,11 @@ const componentPanel = (model: Model, h: HtmlBuilder<Message>): Html =>
               model.toast,
               {
                 position: 'BottomRight',
+                // Above the dialog overlay (z-50) so demo screenshots stay readable.
+                containerClassName: 'z-[60]',
+                // styledViewInputs already renders the variant icon on the left.
                 toContent: (entry, toastH) => [
-                  toastH.div(
-                    [toastH.Class('flex items-center gap-3')],
-                    [
-                      Toast.toastIcon(toastH, entry.variant),
-                      toastH.p([toastH.Class(Toast.toastTitleClass)], [entry.payload.title]),
-                    ],
-                  ),
+                  toastH.p([toastH.Class(Toast.toastTitleClass)], [entry.payload.title]),
                 ],
               },
               h,

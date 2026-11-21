@@ -115,7 +115,7 @@ export const toastEntryWrapperClass =
 export const toastContentClass =
   'flex h-full w-full items-center gap-3 overflow-hidden p-4 transition-opacity duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] data-[behind]:opacity-0 data-[expanded]:opacity-100'
 
-export const toastTitleClass = 'text-base font-medium leading-6 text-primary-foreground'
+export const toastTitleClass = 'font-sans text-base font-medium leading-6 text-primary-foreground'
 
 export const toastDescriptionClass = 'text-base leading-6 text-primary-foreground/80'
 
