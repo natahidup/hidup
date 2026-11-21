@@ -6,7 +6,7 @@ import * as Layer from 'effect/Layer'
 import * as Logger from 'effect/Logger'
 import * as Tracer from 'effect/Tracer'
 import { RpcSerialization, RpcServer } from 'effect/rpc'
-import { Api, ApiError, RPC_PATH } from '@nata/rpc'
+import { Api, ApiError, RPC_PATH } from '@nata/rpc/karir'
 import { SystemHandlers } from './contexts/system/handlers.ts'
 
 /**

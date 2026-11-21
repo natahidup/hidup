@@ -1,7 +1,7 @@
 import { Context, Layer } from 'effect'
 import { RpcClient, RpcClientError, RpcSerialization } from 'effect/rpc'
 import { Http } from 'foldkit'
-import { Api, RPC_PATH } from '@nata/rpc'
+import { Api, RPC_PATH } from '@nata/rpc/karir'
 
 export class ApiRpc extends Context.Service<
   ApiRpc,

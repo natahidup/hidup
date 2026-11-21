@@ -1,6 +1,7 @@
 import { foldkit } from '@foldkit/vite-plugin'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
 import { defineConfig } from 'vite'
+import { WEB_BASE } from '@nata/rpc/karir'
 
 const authToken = process.env.SENTRY_AUTH_TOKEN
 const org = process.env.SENTRY_ORG
@@ -9,8 +10,8 @@ const release = process.env.VITE_SENTRY_RELEASE
 const uploads = authToken !== undefined && org !== undefined && project !== undefined
 
 export default defineConfig({
-  // NataKarir is served under /karir on natahidup.app (Workers Routes).
-  base: '/karir/',
+  // Keep Vite base aligned with WEB_BASE from the karir wire contract.
+  base: `${WEB_BASE}/`,
   // Source maps go to Sentry only from a build with the upload credentials, and
   // never into the deployed assets: hidden maps carry no link in the bundle.
   build: { sourcemap: uploads ? 'hidden' : false },

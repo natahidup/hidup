@@ -6,7 +6,7 @@ import { FetchHttpClient } from 'effect/http'
 import * as HttpRouter from 'effect/http/HttpRouter'
 import { Rpc, RpcClient, RpcGroup, RpcSerialization, RpcServer } from 'effect/rpc'
 import { expect, test } from 'vitest'
-import { Api, ApiError, RPC_PATH, SystemRpc } from '@nata/rpc'
+import { Api, ApiError, RPC_PATH, SystemRpc } from '@nata/rpc/karir'
 import { handler, handlerFor } from './handler.ts'
 
 const url = `http://api.test${RPC_PATH}`
@@ -79,7 +79,7 @@ test('the API Worker rejects unknown paths', async () => {
   expect(response.status).toBe(404)
 })
 
-const failurePath = '/api/failure'
+const failurePath = '/api/karir/failure'
 
 const FailureRpc = RpcGroup.make(
   Rpc.make('failure', {

@@ -3,7 +3,7 @@ import { sentryRollupPlugin } from '@sentry/rollup-plugin'
 import * as Alchemy from 'alchemy'
 import * as Effect from 'effect/Effect'
 import * as Layer from 'effect/Layer'
-import { API_PREFIX } from '@nata/rpc'
+import { API_PREFIX } from '@nata/rpc/karir'
 
 const compatibility = { date: '2026-10-08' }
 // The Sentry SDK in the API and website Workers needs AsyncLocalStorage, which

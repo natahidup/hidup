@@ -7,7 +7,7 @@ const sourceRoot = dirname(fileURLToPath(import.meta.url))
 const repositoryRoot = join(sourceRoot, '../../..')
 const contextsRoot = join(sourceRoot, 'contexts')
 const webRoot = join(repositoryRoot, 'apps/karir/src')
-const rpcRoot = join(repositoryRoot, 'packages/rpc/src')
+const rpcRoot = join(repositoryRoot, 'packages/rpc/src/karir')
 
 /** Adapters the deployment owns; contexts must stay platform-agnostic. */
 const importsHostAdapter =

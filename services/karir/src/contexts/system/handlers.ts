@@ -1,5 +1,5 @@
 import * as Effect from 'effect/Effect'
-import { SystemRpc } from '@nata/rpc'
+import { SystemRpc } from '@nata/rpc/karir'
 
 export const SystemHandlers = SystemRpc.toLayer(
   Effect.succeed(
