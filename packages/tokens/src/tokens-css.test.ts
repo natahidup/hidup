@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
 import { emitTokensCss } from './css.ts'
 import { semantic } from './semantic.ts'
+import { RESERVED_SPACING_KEYS, spacing } from './spacing.ts'
 import { themeInline } from './theme.ts'
 
 const packageRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
@@ -66,4 +67,10 @@ test('theme inline maps semantic colors to CSS variables', () => {
   expect(themeInline['color-background']).toBe('var(--background)')
   expect(themeInline['color-primary']).toBe('var(--primary)')
   expect(themeInline['radius-lg']).toBe('var(--radius)')
+})
+
+test('spacing keys do not collide with Tailwind sizing utilities', () => {
+  for (const key of RESERVED_SPACING_KEYS) {
+    expect(Object.hasOwn(spacing, key), `spacing.${key} collides with Tailwind`).toBe(false)
+  }
 })

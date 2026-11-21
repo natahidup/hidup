@@ -17,6 +17,6 @@ export {
   type SemanticTokens,
 } from './semantic.ts'
 export { shadows, type Shadows } from './shadows.ts'
-export { spacing, type Spacing } from './spacing.ts'
+export { RESERVED_SPACING_KEYS, spacing, type Spacing } from './spacing.ts'
 export { themeInline, type ThemeInline } from './theme.ts'
 export { typography, type Typography } from './typography.ts'
