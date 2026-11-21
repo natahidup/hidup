@@ -1,8 +1,9 @@
 # Deploy
 
-Alchemy deploys the website Worker and the API Worker as one stack. The website
-Worker reaches the API through a service binding, so the API has no public URL.
-This page covers the first deploy and the manual CI workflow.
+Alchemy deploys the karir website Worker and the karir API Worker as one stack.
+Path routing on `natahidup.app` uses Cloudflare Workers Routes
+(`/karir*` and `/api/karir*`). Locally the website Worker reaches the API through
+a service binding. This page covers the first deploy and the manual CI workflow.
 
 ## Prerequisites
 
@@ -10,7 +11,7 @@ This page covers the first deploy and the manual CI workflow.
 - A Cloudflare account and an API token. The token needs Workers Scripts: Edit
   for the default stack. Add D1: Edit when you add the database, and the
   permissions for R2 or Durable Objects when you add those resources.
-- A zone in the same account if you attach a custom domain.
+- A zone for `natahidup.app` in the same account for Workers Routes.
 - The account ID. Find it in the Cloudflare dashboard.
 
 For a local deploy, authenticate Alchemy with its login flow or export the two
@@ -30,15 +31,15 @@ pnpm deploy
 ```
 
 `pnpm deploy` runs `alchemy deploy --stage prod`. The first run creates the
-state store, then the Workers. Alchemy may ask before it updates the state store.
-In CI, `--yes` accepts that prompt:
+state store, then the Workers and their routes. Alchemy may ask before it
+updates the state store. In CI, `--yes` accepts that prompt:
 
 ```sh
 pnpm exec alchemy deploy --stage prod --yes
 ```
 
-The first deploy prints the `workers.dev` URL of the website. Open it, then call
-the API from the app. The API Worker stays private because
+The first deploy prints the website URL. Open `/karir`, then call the API from
+the app at `/api/karir/rpc`. The API Worker stays off `workers.dev` because
 `alchemy.run.ts` sets `workersDev: false`.
 
 ## State
@@ -83,30 +84,21 @@ on:
 
 Keep the `production` environment approval if you want a human gate.
 
-## Custom domain
+## Custom domain and path routes
 
-Only the `prod` stage should attach the public domain. Add it to the `Website`
-resource in `alchemy.run.ts`:
+Prod attaches Workers Routes for NataKarir from `WEB_BASE` and `API_PREFIX` in
+`packages/rpc/src/karir/paths.ts`:
 
 ```ts
-const Website = Cloudflare.Website.Foldkit('Website', {
-  rootDir: 'apps/web',
-  main: 'src/worker.ts',
-  env: { API: ApiWorker, ...sentryEnv, ...rateLimits },
-  assets: { runWorkerFirst: [`${API_PREFIX}/*`] },
-  ...(stage === 'prod' && {
-    domain: {
-      name: 'example.com',
-      redirects: ['www.example.com'],
-    },
-  }),
-  compatibility: sentryCompatibility,
-  observability,
-})
+const zoneName = 'natahidup.app'
+const karirWebRoutes = [{ pattern: `${zoneName}${WEB_BASE}*`, zoneName }]
+const karirApiRoutes = [{ pattern: `${zoneName}${API_PREFIX}*`, zoneName }]
 ```
 
-The zone must already exist in the Cloudflare account. The API Worker keeps
-`workersDev: false`; remove that line only when the API needs its own hostname.
+The zone must already exist in the Cloudflare account. Prefer path routes over
+giving the website Worker the whole hostname, so later modules can claim
+`/uang*` and `/api/uang*` the same way. The API Worker keeps `workersDev: false`;
+remove that line only when the API needs its own hostname.
 
 ## Secrets and environment variables
 
@@ -130,6 +122,5 @@ Redeploy the commit that worked. The manual workflow checks out the selected
 commit, and Alchemy applies the previous stack state. Do not run
 `alchemy destroy` against production without a backup plan.
 
-After a deploy, check the website URL, the Workers logs, and the RPC call from
-the app. [Production](production.md) lists the settings to review before real
-traffic.
+After a deploy, check `/karir`, the Workers logs, and the RPC call from the app.
+[Production](production.md) lists the settings to review before real traffic.

@@ -1,9 +1,10 @@
 # Recipes
 
 These are the changes a feature usually needs next. Each recipe keeps the same
-boundaries as the starter: the wire contract in `packages/rpc`, a context in
-`apps/backend/src/contexts`, a host adapter in `apps/backend/src/platform`, and
-composition in `apps/backend/src/handler.ts`.
+boundaries as the starter: the wire contract in `packages/rpc/src/karir`, a
+context in `services/karir/src/contexts`, a host adapter in
+`services/karir/src/platform`, and composition in
+`services/karir/src/handler.ts`.
 
 ## Add a D1-backed store
 
@@ -13,7 +14,7 @@ This recipe adds a `notes` table and a `notesList` RPC. The context never sees a
 ### 1. Declare the contract
 
 ```ts
-// packages/rpc/src/notes.ts
+// packages/rpc/src/karir/notes.ts
 import { Schema } from 'effect'
 import { Rpc, RpcGroup } from 'effect/rpc'
 import { ApiError } from './errors.ts'
@@ -31,7 +32,7 @@ export class NotesRpc extends RpcGroup.make(
 ) {}
 ```
 
-Merge it into the served group in `packages/rpc/src/index.ts`:
+Merge it into the served group in `packages/rpc/src/karir/index.ts`:
 
 ```ts
 export class Api extends SystemRpc.merge(NotesRpc) {}
@@ -40,7 +41,7 @@ export class Api extends SystemRpc.merge(NotesRpc) {}
 ### 2. Define the store interface
 
 ```ts
-// apps/backend/src/contexts/notes/store.ts
+// services/karir/src/contexts/notes/store.ts
 import { Context, type Effect } from 'effect'
 import { Schema } from 'effect'
 
@@ -54,7 +55,7 @@ export class NoteStoreError extends Schema.TaggedError<
 export class NoteStore extends Context.Service<
   NoteStore,
   Readonly<{ list: Effect.Effect<ReadonlyArray<Note>, NoteStoreError> }>
->()('nata/backend/NoteStore') {}
+>()('nata/karir-api/NoteStore') {}
 ```
 
 The context imports `effect` and its own files. It does not import D1.
@@ -64,7 +65,7 @@ The context imports `effect` and its own files. It does not import D1.
 Start with a structural SQL type so a `D1Database` and a test database both fit:
 
 ```ts
-// apps/backend/src/platform/sql.ts
+// services/karir/src/platform/sql.ts
 export type SqlRunner = Readonly<{
   prepare: (query: string) => Readonly<{
     all: <T>() => Promise<Readonly<{ results: ReadonlyArray<T> }>>
@@ -73,7 +74,7 @@ export type SqlRunner = Readonly<{
 ```
 
 ```ts
-// apps/backend/src/platform/d1-note-store.ts
+// services/karir/src/platform/d1-note-store.ts
 import * as Effect from 'effect/Effect'
 import { NoteStore, NoteStoreError, type Note } from '../contexts/notes/store.ts'
 import type { SqlRunner } from './sql.ts'
@@ -89,7 +90,7 @@ export const d1NoteStore = (db: SqlRunner): NoteStore['Service'] => ({
 ### 4. Add the migration
 
 ```sql
--- apps/backend/migrations/0001_notes.sql
+-- services/karir/migrations/0001_notes.sql
 CREATE TABLE notes (
   id TEXT PRIMARY KEY,
   body TEXT NOT NULL
@@ -100,11 +101,11 @@ Bind the database in `alchemy.run.ts`:
 
 ```ts
 const Database = Cloudflare.D1.Database('Database', {
-  migrations: './apps/backend/migrations',
+  migrations: './services/karir/migrations',
 })
 
-const ApiWorker = Cloudflare.Worker('Api', {
-  main: './apps/backend/src/worker.ts',
+const KarirApi = Cloudflare.Worker('KarirApi', {
+  main: './services/karir/src/worker.ts',
   env: { DB: Database },
   // ...
 })
@@ -113,9 +114,9 @@ const ApiWorker = Cloudflare.Worker('Api', {
 ### 5. Compose it
 
 ```ts
-// apps/backend/src/contexts/notes/handlers.ts
+// services/karir/src/contexts/notes/handlers.ts
 import * as Effect from 'effect/Effect'
-import { NotesRpc } from '@nata/rpc'
+import { NotesRpc } from '@nata/rpc/karir'
 import { NoteStore } from './store.ts'
 
 export const NotesHandlers = NotesRpc.toLayer(
@@ -132,7 +133,7 @@ export const NotesHandlers = NotesRpc.toLayer(
 layers:
 
 ```ts
-// apps/backend/src/handler.ts
+// services/karir/src/handler.ts
 export type HandlerInput = Readonly<{
   system: typeof SystemHandlers
   notes: typeof NotesHandlers
@@ -159,7 +160,7 @@ and the notes context.
 The Worker builds the handler from its binding and keeps it for the isolate:
 
 ```ts
-// apps/backend/src/worker.ts
+// services/karir/src/worker.ts
 import { NotesHandlers } from './contexts/notes/handlers.ts'
 import { SystemHandlers } from './contexts/system/handlers.ts'
 import { handlerFor, type HandlerInput } from './handler.ts'
@@ -187,11 +188,11 @@ export default {
 
 Import the two handler layers in `worker.ts`, or let `handlerFor` take a
 `HandlerInput` built in `entry.ts`. Keep the binding at the edge, and keep the
-`Sentry.withSentry` wrapper from the starter around the export.
+`Sentry.withSentry` wrapper and rate limiter from the starter around the export.
 
 ### 6. Test the store
 
-`apps/backend/src/worker.test.ts` already passes a fake layer to `handlerFor`.
+`services/karir/src/worker.test.ts` already passes a fake layer to `handlerFor`.
 For a store, use `node:sqlite` with the same `SqlRunner` shape, or pass a fake
 `NoteStore`:
 
@@ -210,4 +211,4 @@ shape without a Worker.
 Bindings are declared in `alchemy.run.ts` and typed at the Worker edge. Add the
 resource to the Worker's `env`, then add the field to the Worker's `Env` type.
 Do not import the binding in a context. If a context needs the data, define a
-store interface and implement it in `apps/backend/src/platform`.
+store interface and implement it in `services/karir/src/platform`.
