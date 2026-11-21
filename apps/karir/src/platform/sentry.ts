@@ -3,7 +3,6 @@ import { SentryEffectTracer } from '@sentry/effect/client'
 import { Layer, Option, Tracer } from 'effect'
 import { Runtime } from 'foldkit'
 import { API_PREFIX } from '@nata/rpc/karir'
-import type { Message, Model } from '../app/main.ts'
 
 /**
  * Errors, traces, and profiles for the browser. Nothing starts without a DSN,
@@ -31,8 +30,10 @@ export const startSentry = (): void => {
   })
 }
 
+type Tagged = { readonly _tag: string }
+
 /** Foldkit calls this after the runtime stops, before it paints the crash view. */
-export const reportCrash = ({ error, message }: Runtime.CrashContext<Model, Message>): void => {
+export const reportCrash = ({ error, message }: Runtime.CrashContext<unknown, Tagged>): void => {
   if (!DSN) return
   Sentry.captureException(error, {
     level: 'fatal',
@@ -47,7 +48,7 @@ export const reportCrash = ({ error, message }: Runtime.CrashContext<Model, Mess
  * for a phase over it. A healthy frame costs nothing. The Message tag says which
  * gesture was slow.
  */
-export const reportSlow = (context: Runtime.SlowContext<Model, Message>): void => {
+export const reportSlow = (context: Runtime.SlowContext<unknown, Tagged>): void => {
   // An `onSlow` callback replaces Foldkit's console warning, so keep it in development.
   if (!import.meta.env.PROD) Runtime.defaultSlowCallback(context as never)
   if (!DSN) return
