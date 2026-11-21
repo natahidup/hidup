@@ -12,7 +12,8 @@ const ignored = [
 
 export default defineConfig({
   fmt: {
-    ignorePatterns: [...ignored, '**/*.d.ts'],
+    // Generated from TypeScript — kept in sync by @nata/tokens tests.
+    ignorePatterns: [...ignored, '**/*.d.ts', 'packages/tokens/tokens.css'],
     semi: false,
     singleQuote: true,
     trailingComma: 'all',

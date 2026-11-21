@@ -1,0 +1,14 @@
+{
+  "name": "@nata/tokens",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./tokens.css": "./tokens.css"
+  },
+  "scripts": {
+    "generate": "node --experimental-strip-types ./scripts/generate-css.ts",
+    "typecheck": "tsrs --noEmit -p tsconfig.json && effect-tsrs diagnostics --strict --project tsconfig.json",
+    "test": "vitest run"
+  }
+}
