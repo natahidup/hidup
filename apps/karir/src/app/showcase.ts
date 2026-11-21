@@ -269,7 +269,14 @@ const componentPanel = (model: Model, h: HtmlBuilder<Message>): Html =>
                     [icon(dialogH, X, 'size-4')],
                     dialogH,
                   ),
-                  Dialog.footer({}, [dialogH.p([dialogH.Class('text-sm')], ['Ready.'])], dialogH),
+                  Dialog.footer(
+                    {},
+                    [
+                      button({ variant: 'tertiary', attributes: closeButton }, 'Cancel', dialogH),
+                      button({ attributes: closeButton }, 'Confirm', dialogH),
+                    ],
+                    dialogH,
+                  ),
                 ],
               },
               h,
@@ -311,10 +318,10 @@ const componentPanel = (model: Model, h: HtmlBuilder<Message>): Html =>
                 position: 'BottomRight',
                 toContent: (entry, toastH) => [
                   toastH.div(
-                    [toastH.Class('flex items-start gap-2')],
+                    [toastH.Class('flex items-center gap-3')],
                     [
                       Toast.toastIcon(toastH, entry.variant),
-                      toastH.p([toastH.Class('text-sm font-medium')], [entry.payload.title]),
+                      toastH.p([toastH.Class(Toast.toastTitleClass)], [entry.payload.title]),
                     ],
                   ),
                 ],

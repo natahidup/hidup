@@ -12,6 +12,7 @@ export const buttonVariantKeys = [
   'destructive',
   'outline',
   'secondary',
+  'tertiary',
   'ghost',
   'link',
 ] as const
@@ -24,6 +25,8 @@ export const buttonVariants: Record<ButtonVariant, string> = {
   outline: 'border border-border bg-secondary text-secondary-foreground shadow-none hover:bg-muted',
   secondary:
     'border border-border bg-secondary text-secondary-foreground shadow-none hover:bg-muted',
+  /** Indigo mono uppercase text, no box. */
+  tertiary: 'border-0 bg-transparent text-primary shadow-none hover:text-primary-hover',
   ghost: 'border-0 shadow-none hover:bg-muted hover:text-foreground',
   link: 'border-0 bg-transparent text-primary shadow-none underline-offset-4 hover:underline',
 }

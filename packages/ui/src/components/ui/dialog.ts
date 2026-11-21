@@ -39,18 +39,22 @@ export type RenderInfo = FoldkitDialog.RenderInfo
 /** foldkit delta: the host <dialog> element's own chrome (upstream Root renders
  *  nothing). Backdrop/panel are fixed-position; this only neutralizes the
  *  native dialog box. */
-export const dialogClass = 'bg-transparent p-0 open:flex items-center justify-center'
+/** Host covers the viewport so fixed backdrop/panel children are not clipped. */
+export const dialogClass =
+  'fixed inset-0 z-50 m-0 flex h-full max-h-none w-full max-w-none items-center justify-center bg-transparent p-0 open:flex'
 
 // The @foldkit/ui Dialog defers Animation submodel attributes onto the
 // backdrop/panel elements: `data-enter` while entering, `data-leave` while
 // leaving (never `data-state`). The sync script rewrites upstream's
 // `data-open:`/`data-closed:` animation utilities to these windows during token
 // sync; persistent `data-open:` styling passes through untouched.
+/** Ink #1B1B1F at 40% — full viewport via fixed inset-0. */
 export const dialogBackdropClass =
-  'data-enter:animate-in data-leave:animate-out data-leave:fade-out-0 data-enter:fade-in-0 bg-black/10 duration-100 supports-backdrop-filter:backdrop-blur-xs fixed inset-0 isolate z-50'
+  'data-enter:animate-in data-leave:animate-out data-leave:fade-out-0 data-enter:fade-in-0 fixed inset-0 z-50 bg-foreground/40 duration-100'
 
+/** Parchment surface, stone border, 4px radius (brand base). */
 export const dialogPanelClass =
-  'bg-popover text-popover-foreground data-enter:animate-in data-leave:animate-out data-leave:fade-out-0 data-enter:fade-in-0 data-leave:zoom-out-95 data-enter:zoom-in-95 ring-foreground/10 grid max-w-[calc(100%-2rem)] gap-4 rounded-xl p-4 text-sm ring-1 duration-100 sm:max-w-sm fixed top-1/2 left-1/2 z-50 w-full -translate-x-1/2 -translate-y-1/2 outline-none'
+  'bg-card text-card-foreground data-enter:animate-in data-leave:animate-out data-leave:fade-out-0 data-enter:fade-in-0 data-leave:zoom-out-95 data-enter:zoom-in-95 grid max-w-[calc(100%-2rem)] gap-4 rounded-[var(--radius)] border border-border p-4 text-base shadow-none duration-100 sm:max-w-sm fixed top-1/2 left-1/2 z-50 w-full -translate-x-1/2 -translate-y-1/2 outline-none'
 
 /** Upstream renders its close control as `<Button variant="ghost" size="icon-sm"
  *  className="cn-dialog-close">`; compose the same tokens here. */
@@ -65,7 +69,7 @@ export const dialogDescriptionClass =
 export const dialogHeaderClass = 'gap-2 flex flex-col'
 
 export const dialogFooterClass =
-  'bg-muted/50 -mx-4 -mb-4 rounded-b-xl border-t p-4 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end'
+  'border-t border-border -mx-4 -mb-4 rounded-b-[var(--radius)] p-4 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end'
 
 // These abstract away element types, base classes, and attribute spreading.
 // Use inside `styledViewInputs` content callbacks:
