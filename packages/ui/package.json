@@ -6,7 +6,16 @@
     ".": "./src/index.ts",
     "./styles.css": "./src/styles.css",
     "./lib/*": "./src/lib/*.ts",
-    "./components/ui/*": "./src/components/ui/*.ts"
+    "./components/ui/*": "./src/components/ui/*.ts",
+    "./components/ui/dialog": "./src/components/ui/dialog.ts",
+    "./components/ui/menu": "./src/components/ui/menu.ts",
+    "./components/ui/toast": "./src/components/ui/toast.ts",
+    "./components/ui/button": "./src/components/ui/button.ts",
+    "./components/ui/input": "./src/components/ui/input.ts",
+    "./components/ui/label": "./src/components/ui/label.ts",
+    "./components/ui/card": "./src/components/ui/card.ts",
+    "./components/ui/badge": "./src/components/ui/badge.ts",
+    "./components/ui/skeleton": "./src/components/ui/skeleton.ts"
   },
   "scripts": {
     "typecheck": "tsrs --noEmit -p tsconfig.json && effect-tsrs diagnostics --strict --project tsconfig.json",

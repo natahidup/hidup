@@ -1,5 +1,6 @@
 import { foldkit } from '@foldkit/vite-plugin'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
+import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'vite'
 import { WEB_BASE } from '@nata/rpc/karir'
 
@@ -16,6 +17,7 @@ export default defineConfig({
   // never into the deployed assets: hidden maps carry no link in the bundle.
   build: { sourcemap: uploads ? 'hidden' : false },
   plugins: [
+    tailwindcss(),
     foldkit(),
     // Last, so it sees the final bundle.
     uploads
